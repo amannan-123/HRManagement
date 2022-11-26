@@ -1,0 +1,178 @@
+﻿@model HRManagement.Models.Employee
+
+@{
+	ViewData["Title"] = "Add";
+}
+
+<div class="bg-light">
+	<div class="container">
+
+		<!-- Banner -->
+		<h3 class="my-3 ms-2">Employee Page</h3>
+
+		<!-- Employee Form -->
+		<form method="post" enctype="multipart/form-data" asp-action="Add">
+			<div asp-validation-summary="All"></div>
+
+			<div class="row d-flex align-items-center justify-content-center m-2">
+
+				<!-- Employee Information -->
+				<div class="bg-body shadow p-3 mb-5 bg-body rounded b-top">
+
+					<h4 class="mb-3">Employee Information</h4>
+
+					<div class="row">
+						<div class="col-3 form-group">
+							<label asp-for="EmployeeCode" class="form-label">Employee Code</label>
+							<input asp-for="EmployeeCode" type="text" class="form-control" placeholder="Employee Code"
+								   maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="EmployeeName" class="form-label">Employee Name</label>
+							<input asp-for="EmployeeName" type="text" class="form-control" placeholder="Employee Name" required
+								   maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="AppointedBy" class="form-label">Appointed By</label>
+							<input asp-for="AppointedBy" type="text" class="form-control" placeholder="Appointed By" required
+								   maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="JoinDate" class="form-label">Join Date</label>
+							<input asp-for="JoinDate" type="date" class="form-control" placeholder="Last Name" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-3 form-group">
+							<label asp-for="Qualification" class="form-label">Qualification</label>
+							<select asp-for="Qualification" class="form-control form-select" required>
+								<option value="Bachelors">Bachelors</option>
+								<option value="Masters">Masters</option>
+								<option value="Intermediate">Intermediate</option>
+								<option value="Matric">Matric/Secondary</option>
+							</select>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Gender" class="form-label">Gender</label>
+							<select asp-for="Gender" class="form-control form-select" required>
+								<option value="Male">Male</option>
+								<option value="Female">Female</option>
+								<option value="Other">Other</option>
+							</select>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+							<input asp-for="DateOfBirth" type="date" class="form-control" placeholder="Last Name" required>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Religion" class="form-label">Religion</label>
+							<select asp-for="Religion" class="form-control form-select" required>
+								<option value="Islam">Islam</option>
+								<option value="Christianity">Christianity</option>
+								<option value="Hinduism">Hinduism</option>
+								<option value="Other">Other</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-3 form-group">
+							<label asp-for="MaritalStatus" class="form-label">Marital Status</label>
+							<select asp-for="MaritalStatus" class="form-control form-select" required>
+								<option value="Single">Single</option>
+								<option value="Married">Married</option>
+								<option value="Divorced">Divorced</option>
+							</select>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Dependants" class="form-label">Number of Dependants</label>
+							<input asp-for="Dependants" type="number" class="form-control" required>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Email" class="form-label">Email</label>
+							<input asp-for="Email" type="email" class="form-control" placeholder="Email" required>
+						</div>
+						<div class="col-3 form-group">
+							<label for="EmployeeImage" class="form-label">Employee Picture</label>
+							<img id="prevImage" class="my-2" border="1" src="~/images/avatar.png" alt="Avatar" width="100"
+								 height="100">
+							<input type="file" name="EmployeeImage" id="EmployeeImage" accept="image/*" class="form-control">
+						</div>
+					</div>
+
+				</div>
+
+				<!-- Contact Information -->
+				<div class="bg-body shadow p-3 mb-5 bg-body rounded b-top">
+
+					<h4 class="mb-3">Contact Information</h4>
+
+					<div class="row">
+						<div class="col-3 form-group">
+							<label asp-for="PostBox" class="form-label">Post Box</label>
+							<input asp-for="PostBox" type="text" class="form-control" placeholder="Post Box" required maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Country" class="form-label">Country</label>
+							<input asp-for="Country" type="text" class="form-control" placeholder="Country" required maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="City" class="form-label">City</label>
+							<input asp-for="City" type="text" class="form-control" placeholder="City" required maxlength="100">
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Landline" class="form-label">Landline</label>
+							<input asp-for="Landline" type="number" class="form-control" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-3 form-group">
+							<label asp-for="Mobile" class="form-label">Mobile</label>
+							<input asp-for="Mobile" type="number" class="form-control" required>
+						</div>
+						<div class="col-3 form-group">
+							<label asp-for="Address" class="form-label">Address</label>
+							<textarea asp-for="Address" class="form-control" rows="2"></textarea>
+						</div>
+					</div>
+
+				</div>
+
+				<input class="btn btn-primary add-emp-btn" type="submit" value="Add Employee" />
+
+			</div>
+		</form>
+
+	</div>
+</div>
+
+@section Scripts{
+
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		//get jquery intellisense
+		/// <reference path="../../wwwroot/lib/jquery/dist/jquery.js" />
+		$(document).ready(function () {
+			const readImage = (input) => {
+				if (input.files && input.files[0]) {
+					var reader = new FileReader();
+
+					reader.onload = (e) => {
+						$('#prevImage').attr('src', e.target.result);
+					}
+
+					reader.readAsDataURL(input.files[0]);
+				}
+			}
+
+			$("#EmployeeImage").change(function () {
+				readImage(this);
+			});
+		});
+	</script>
+}
+
+

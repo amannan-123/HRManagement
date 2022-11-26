@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="container">
+
+	<!-- Outer Row -->
+	<div class="row justify-content-center">
+
+		<div class="col-xl-10 col-lg-12 col-md-9">
+
+			<div class="card o-hidden border-0 shadow-lg my-5">
+				<div class="card-body p-0">
+					<!-- Nested Row within Card Body -->
+					<div class="row" style="max-height:463px;">
+						<div class="col-lg-5 d-none d-lg-block login-image"></div>
+						<div class="col-lg-7">
+							<div class="p-5">
+								<div class="text-center">
+									<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+								</div>
+								<form class="user" method="post" asp-controller="Login" asp-action="Index">
+									<div class="form-group">
+										<input type="email" class="form-control form-control-user" required
+											   id="userEmail" name="userEmail" placeholder="Email Address">
+									</div>
+									<div class="form-group">
+										<input type="password" class="form-control form-control-user" required
+											   id="userPassword" name="userPassword" placeholder="Password">
+									</div>
+									<div class="form-group">
+										<div class="custom-control custom-checkbox small">
+											<input type="checkbox" class="custom-control-input"
+												   id="userRemember" name="userRemember">
+											<label class="custom-control-label" for="userRemember">
+												Remember Me
+											</label>
+										</div>
+									</div>
+									<input type="submit" value="Login" class="btn btn-primary btn-user btn-block" />
+
+									@if (ViewData?.ModelState["CustomError"] != null)
+									{
+										@foreach (ModelError? err in ViewData?.ModelState["CustomError"].Errors)
+										{
+											<span class="d-block text-center text-danger">@err.ErrorMessage</span>
+										}
+									}
+								</form>
+								<hr>
+								<div class="text-center">
+									<a class="small" asp-controller="Signup" asp-action="Index">Create an Account!</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

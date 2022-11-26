@@ -1,0 +1,265 @@
+﻿@model List<HRManagement.Models.Designation>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+	<h1 class="h3 mb-0 text-gray-800">Designation</h1>
+	<i class="fas fa-plus fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#addModal"></i>
+</div>
+
+<div class="row">
+
+	@*Designation Card*@
+	@foreach (var item in Model as List<Designation>)
+	{
+		<div class="col-lg-4 col-md-5 mb-4">
+			<div class="card border-left-primary shadow h-100 py-2">
+				<div class="card-body py-1">
+					<div class="row no-gutters align-items-center">
+						<div class="col mr-2">
+							<div class="font-weight-bold text-primary mb-1">
+								<p class="mb-1">Designation Code:</p>
+								<p class="text-dark h5">@item.Code</p>
+							</div>
+							<div class="font-weight-bold text-primary mb-1">
+								<p class="mb-1">Designation Name:</p>
+								<p class="text-dark h4">@item.Name</p>
+							</div>
+						</div>
+						@*Edit*@
+						<div class="col-auto mt-2">
+							<i class="fas fa-edit fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#editModal" name="openEdit"></i>
+							<input type="text" name="desId" value="@item.Id" hidden />
+							<input type="text" name="desCode" value="@item.Code" hidden />
+							<input type="text" name="desName" value="@item.Name" hidden />
+						</div>
+						@*Delete*@
+						<div class="col-auto mt-2">
+							<i class="fas fa-trash fa-2x text-white bg-danger p-2 ml-3 rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" name="openDelete"></i>
+							<input type="text" name="desId" value="@item.Id" hidden />
+							<input type="text" name="desName" value="@item.Name" hidden />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+
+</div>
+
+
+@*Add Modal*@
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add New Designation</h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 mb-1">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body py-1">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+
+										<div class="font-weight-bold text-primary mb-1">
+											<label>Designation Code</label><br />
+											<input type="text" id="DesAddCode" value="" />
+										</div>
+										<div class="font-weight-bold text-primary mb-1">
+											<label>Designation Name</label><br />
+											<input type="text" id="DesAddName" value="" />
+										</div>
+
+									</div>
+									<span class="text-danger text-center p-3" id="DesAddError"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer card-header py-3">
+				<button type="button" class="btn btn-primary float-right" id="addDesignation">Save</button>
+				<button type="button" class="btn btn-secondary float-right mr-2" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@*Edit Modal*@
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Designation</h5>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 mb-1">
+						<div class="card border-left-primary shadow h-100 py-2">
+							<div class="card-body py-1">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+
+										<div class="font-weight-bold text-primary mb-1">
+											<label>Designation Id</label><br />
+											<input type="text" id="DesEditId" value="" disabled />
+										</div>
+										<div class="font-weight-bold text-primary mb-1">
+											<label>Designation Code</label><br />
+											<input type="text" id="DesEditCode" value="" />
+										</div>
+										<div class="font-weight-bold text-primary mb-1">
+											<label>Designation Name</label><br />
+											<input type="text" id="DesEditName" value="" />
+										</div>
+
+									</div>
+									<span class="text-danger text-center p-3" id="DesEditError"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer card-header py-3">
+				<button type="button" class="btn btn-primary float-right" id="editDesignation">Save</button>
+				<button type="button" class="btn btn-secondary float-right mr-2" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@*Delete Modal*@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 mb-1">
+						<div class="card border-left-danger shadow h-100 py-2">
+							<div class="card-body py-1">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<p class="text-dark">Realy! You want to delete this Designation?</p>
+										<p class="text-dark" id="desDelId" hidden></p>
+										<p class="text-dark" id="desDelName"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer py-3">
+				<button type="button" class="btn btn-danger float-right" id="deleteDesignation">Delete</button>
+				<button type="button" class="btn btn-secondary float-right mr-2" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+@section Scripts{
+
+	<partial name="_ValidationScriptsPartial" />
+
+	<script>
+		//get jquery intellisense
+		/// <reference path="../../wwwroot/lib/jquery/dist/jquery.js" />
+		$(document).ready(function () {
+
+			$("i[name='openEdit']").click(function () {
+				var DesignationId = $(this).siblings("input[name='desId']").val();
+				var DesignationCode = $(this).siblings("input[name='desCode']").val();
+				var DesignationName = $(this).siblings("input[name='desName']").val();
+				$("#DesEditId").val(DesignationId);
+				$("#DesEditCode").val(DesignationCode);
+				$("#DesEditName").val(DesignationName);
+			});
+
+			$("i[name='openDelete']").click(function () {
+				var DesignationId = $(this).siblings("input[name='desId']").val();
+				var DesignationName = $(this).siblings("input[name='desName']").val();
+				$("#desDelId").text(DesignationId);
+				$("#desDelName").text(DesignationName);
+			});
+
+			$("#addDesignation").click(function () {
+				var DesignationCode = $("#DesAddCode").val();
+				var DesignationName = $("#DesAddName").val();
+
+				if (DesignationCode === "" || DesignationName === "") {
+					$("#DesAddError").text("Input fields cannot be empty.");
+				}
+				else
+					$.ajax({
+						url: "Designation/Add",
+						type: "POST",
+						dataType: "JSON",
+						data: { "code": DesignationCode, "name": DesignationName },
+						cache: false,
+						success: function () {
+							location.reload();
+						},
+						error: function (error) {
+							$("#DesAddError").text(error.responseText);
+							console.log(error);
+						}
+					});
+			});
+
+			$("#editDesignation").click(function () {
+				var DesignationId = $("#DesEditId").val();
+				var DesignationCode = $("#DesEditCode").val();
+				var DesignationName = $("#DesEditName").val();
+
+				if (DesignationCode === "" || DesignationName === "") {
+					$("#DesEditError").text("Input fields cannot be empty.");
+				}
+				else
+					$.ajax({
+						url: "Designation/Edit",
+						type: "POST",
+						dataType: "JSON",
+						data: { "id": DesignationId, "code": DesignationCode, "name": DesignationName },
+						cache: false,
+						success: function () {
+							location.reload();
+						},
+						error: function (error) {
+							$("#DesEditError").text(error.responseText);
+							console.log(error);
+						}
+					});
+			});
+
+			$("#deleteDesignation").click(function () {
+				var DesignationId = $("#desDelId").text();
+				$.ajax({
+					url: "Designation/Delete",
+					type: "POST",
+					dataType: "JSON",
+					data: { "id": DesignationId },
+					cache: false,
+					beforeSend: function () {
+						$("button[data-bs-dismiss='modal']").trigger("click");
+					},
+					success: function () {
+						location.reload();
+					},
+					error: function (error) {
+						console.log(error);
+					}
+				});
+			});
+		});
+
+	</script>
+}

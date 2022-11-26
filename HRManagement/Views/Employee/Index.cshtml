@@ -1,0 +1,50 @@
+﻿@model List<HRManagement.Models.Employee>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
+	<h1>Employees</h1>
+	<a asp-action="Add" class="btn btn-primary">Add Employee</a>
+</div>
+
+<div>
+	<ul class="list-group">
+		@if (Model.Count < 1)
+		{
+			<li class="list-group-item list-group-item-action text-center list-group-item-secondary">
+				<h3>No Employees found!</h3>
+			</li>
+		}
+		else
+		{
+			@foreach (Employee emp in Model)
+			{
+				<li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+					<div class="d-flex">
+						@if (emp.ImageData() != null)
+						{
+							<img id="prevImage" class="my-2" border="1"
+								 src=@emp.ImageData() alt="Avatar" width="100"
+								 height="100">
+						}
+						<div class="d-flex flex-row gap-3 flex-nowrap align-items-center ms-3">
+							<a>
+								<strong>Code:</strong> @emp.EmployeeCode
+							</a>
+							<a>
+								<strong>Name:</strong> @emp.EmployeeName
+							</a>
+						</div>
+					</div>
+					<div>
+						@*<a class="btn btn-info">Details</a>*@
+						<a class="btn btn-info" asp-route-id="@emp.Id" asp-action="Edit">Edit</a>
+						<a class="btn btn-danger" asp-route-id="@emp.Id" asp-action="Delete">Delete</a>
+					</div>
+				</li>
+			}
+		}
+	</ul>
+</div>

@@ -1,0 +1,17 @@
+.login-image {
+	background: url('../images/login-bg.png');
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+.b-top {
+	border-top: 3px #0086a1 solid;
+}
+
+.add-emp-btn {
+	width: 130px;
+}
+
+.edit-emp-btn {
+	width: 190px;
+}

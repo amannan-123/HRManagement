@@ -1,0 +1,74 @@
+﻿@model HRManagement.Models.User
+@using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+@{
+	ViewData["Title"] = "Signup";
+}
+
+<div class="container">
+
+	<div class="card o-hidden border-0 shadow-lg my-5">
+		<div class="card-body p-0">
+			<!-- Nested Row within Card Body -->
+			<div class="row">
+				<div class="col-lg-5 d-none d-lg-block login-image"></div>
+				<div class="col-lg-7">
+					<div class="p-5">
+						<div class="text-center">
+							<h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+						</div>
+						<form class="user" asp-controller="Signup" asp-action="Index">
+							<div class="form-group row">
+								<div class="col-sm-6 mb-3 mb-sm-0">
+									<input type="text" class="form-control form-control-user" id="uFirstName"
+										   asp-for="FirstName" placeholder="First Name">
+									<span asp-validation-for="FirstName" class="d-block text-center text-danger"></span>
+								</div>
+								<div class="col-sm-6">
+									<input type="text" class="form-control form-control-user" id="uLastName"
+										   asp-for="LastName" placeholder="Last Name">
+									<span asp-validation-for="LastName" class="d-block text-center text-danger"></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<input type="email" class="form-control form-control-user" id="uEmail"
+									   asp-for="Email" placeholder="Email Address">
+								<span asp-validation-for="Email" class="d-block text-center text-danger"></span>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-6 mb-3 mb-sm-0">
+									<input type="password" class="form-control form-control-user"
+										   asp-for="Password" id="uPassword" placeholder="Password">
+									<span asp-validation-for="Password" class="d-block text-center text-danger"></span>
+								</div>
+								<div class="col-sm-6">
+									<input type="password" class="form-control form-control-user"
+										   asp-for="ConfirmPassword" id="uRepeatPassword" placeholder="Repeat Password">
+									<span asp-validation-for="ConfirmPassword" class="d-block text-center text-danger"></span>
+								</div>
+							</div>
+							<input type="submit" value="Register Account" class="btn btn-primary btn-user btn-block" />
+
+							@if (ViewData?.ModelState["CustomError"] != null)
+							{
+								@foreach (ModelError? err in ViewData?.ModelState["CustomError"].Errors)
+								{
+									<span class="d-block text-center text-danger">@err.ErrorMessage</span>
+								}
+							}
+						</form>
+						<hr>
+						<div class="text-center">
+							<a class="small" asp-controller="Login" asp-action="Index">Already have an account? Login!</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial" />
+}
