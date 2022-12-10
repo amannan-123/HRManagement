@@ -12,6 +12,11 @@
 	width: 130px;
 }
 
+.cancel-emp-btn {
+	width: 100px;
+	margin-right:10px;
+}
+
 .edit-emp-btn {
-	width: 190px;
+	width: 100px;
 }

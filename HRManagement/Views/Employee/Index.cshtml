@@ -1,50 +1,193 @@
-﻿@model List<HRManagement.Models.Employee>
+﻿@model HRManagement.Models.EmployeeViewModel
 
 @{
 	ViewData["Title"] = "Index";
 }
 
-<div class="d-flex flex-row flex-nowrap justify-content-between align-items-center">
+<div class="mb-2 d-flex flex-row flex-nowrap justify-content-between align-items-center">
 	<h1>Employees</h1>
-	<a asp-action="Add" class="btn btn-primary">Add Employee</a>
+	<a asp-action="Add" class="btn btn-primary">
+		<i class="fas fa-plus text-white p-2"></i>
+	</a>
 </div>
 
 <div>
-	<ul class="list-group">
-		@if (Model.Count < 1)
-		{
+
+	@if (Model.Employees.Count < 1)
+	{
+		<ul class="list-group">
 			<li class="list-group-item list-group-item-action text-center list-group-item-secondary">
 				<h3>No Employees found!</h3>
 			</li>
-		}
-		else
-		{
-			@foreach (Employee emp in Model)
+		</ul>
+	}
+	else
+	{
+		<div class="row">
+			<div class="col-12 custom-table table-wide">
+				<div class="table-responsive">
+					<table class="table table-dark table-bordered block-width">
+						<thead>
+							<tr>
+								<th>
+									<span>
+										Employee Code
+									</span>
+								</th>
+								<th>
+									<span>
+										Employee Name
+									</span>
+								</th>
+								<th>
+									<span>
+										Email
+									</span>
+								</th>
+								<th>
+									<span>Joining Date</span>
+								</th>
+								<th>
+									<span>Action</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (Employee item in Model.Employees)
+							{
+								<tr class="emprow">
+									<td>
+										<span>@item.EmployeeCode</span>
+										<input type="hidden" class="hidden empid" value="@item.EmployeeCode" />
+									</td>
+									<td>
+										<span>@item.EmployeeName</span>
+									</td>
+									<td>
+										<span>@item.Email</span>
+									</td>
+									<td>
+										<span>@item.JoinDate.ToString("D")</span>
+									</td>
+									<td>
+										<div>
+											<a class="btn btn-info" asp-route-id="@item.Id" asp-action="View">
+												<i class="fas fa-eye text-white p-1"></i>
+											</a>
+											<a class="btn btn-info" asp-route-id="@item.Id" asp-action="Edit">
+												<i class="fas fa-edit text-white p-1"></i>
+											</a>
+											<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">
+												<i class="fas fa-trash text-white p-1"></i>
+											</a>
+										</div>
+									</td>
+
+								</tr>
+
+							}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		@*@foreach (Employee emp in Model.Employees)
 			{
-				<li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-					<div class="d-flex">
-						@if (emp.ImageData() != null)
-						{
-							<img id="prevImage" class="my-2" border="1"
-								 src=@emp.ImageData() alt="Avatar" width="100"
-								 height="100">
-						}
-						<div class="d-flex flex-row gap-3 flex-nowrap align-items-center ms-3">
-							<a>
-								<strong>Code:</strong> @emp.EmployeeCode
+				<ul class="list-group">
+					<li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+						<div class="d-flex">
+							@if (emp.ImageData() != null)
+							{
+								<img id="prevImage" class="my-2" border="1"
+									 src=@emp.ImageData() alt="Avatar" width="100"
+									 height="100">
+							}
+							<div class="d-flex flex-row gap-3 flex-nowrap align-items-center ms-3">
+								<a>
+									<strong>Code:</strong> @emp.EmployeeCode
+								</a>
+								<a>
+									<strong>Name:</strong> @emp.EmployeeName
+								</a>
+							</div>
+						</div>
+						<div>
+							<a class="btn btn-info" asp-route-id="@emp.Id" asp-action="Edit">
+								<i class="fas fa-edit text-white p-2"></i>
 							</a>
-							<a>
-								<strong>Name:</strong> @emp.EmployeeName
+							<a class="btn btn-danger" asp-route-id="@emp.Id" asp-action="Delete">
+								<i class="fas fa-trash text-white p-2"></i>
 							</a>
 						</div>
-					</div>
-					<div>
-						@*<a class="btn btn-info">Details</a>*@
-						<a class="btn btn-info" asp-route-id="@emp.Id" asp-action="Edit">Edit</a>
-						<a class="btn btn-danger" asp-route-id="@emp.Id" asp-action="Delete">Delete</a>
-					</div>
-				</li>
-			}
-		}
-	</ul>
+					</li>
+				</ul>
+			}*@
+
+		//show pages
+		<form asp-action="Index" asp-controller="Employee" class="mt-2">
+			<input type="text" id="page" name="page" value=@Model.CurrentPage hidden />
+			<div class="d-flex justify-content-between">
+				<ul class="pagination m-0 p-0">
+					<li class="page-item">
+						<button class="page-link pager" type="submit" value="first" disabled="@(Model.CurrentPage==1)">
+							<span>&laquo;</span>
+						</button>
+					</li>
+
+					@for (int i = 1; i <= Model.TotalPages; i++)
+					{
+						@if (Model.CurrentPage == i)
+						{
+							<li class="page-item active">
+								<span class="page-link">@i</span>
+							</li>
+						}
+						else
+						{
+							<li class="page-item">
+								<button class="page-link pager" value=@i type="submit">@i</button>
+							</li>
+						}
+					}
+
+					<li class="page-item">
+						<button class="page-link pager" type="submit" value="last" disabled="@(Model.CurrentPage==Model.TotalPages)">
+							<span>&raquo;</span>
+						</button>
+					</li>
+				</ul>
+
+				<div class="d-flex align-items-center justify-content-center m-0 p-0 gap-2">
+					<label class="m-0 p-0">Items:</label>
+					<select class="form-select" name="rowlength" asp-for="RowLength" onchange="this.form.submit()">
+						<option value="1">1</option>
+						<option value="10">10</option>
+						<option value="50">50</option>
+					</select>
+				</div>
+			</div>
+		</form>
+
+	}
+
 </div>
+
+@section Scripts{
+
+	<script>
+		//get jquery intellisense
+		/// <reference path="../../wwwroot/lib/jquery/dist/jquery.js" />
+
+		$(document).ready(function () {
+
+			$('button.pager').on('click', function () {
+				var text = $(this).val();
+				$("#page").val(text);
+			})
+
+		})
+
+	</script>
+}

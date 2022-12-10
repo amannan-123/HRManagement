@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HRManagement.Models;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace HRManagement.Controllers
 {
@@ -14,8 +13,13 @@ namespace HRManagement.Controllers
 			return View();
 		}
 
-		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		[Authorize]
 		public IActionResult Privacy()
+		{
+			return View();
+		}
+
+		public IActionResult UnAuthorized()
 		{
 			return View();
 		}

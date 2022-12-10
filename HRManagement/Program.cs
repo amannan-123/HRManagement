@@ -3,6 +3,7 @@ using HRManagement.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Text;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -64,6 +65,26 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseSession();
+
+app.UseStatusCodePages(async context =>
+{
+	var response = context.HttpContext.Response;
+
+	if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
+			response.StatusCode == (int)HttpStatusCode.Forbidden)
+		response.Redirect("/Home/Unauthorized");
+});
+
+//app.Use(async (context, next) =>
+//{
+//	await next();
+
+//	if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
+//	{
+//		await context.Response.WriteAsync("Token Validation Has Failed. Request Access Denied.");
+//		await context.Response.WriteAsync("\nPlease Login Again");
+//	}
+//});
 
 app.UseHeaderModifier();
 app.UseAuthentication();

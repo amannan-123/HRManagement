@@ -8,8 +8,8 @@
 	<div class="container">
 
 		<!-- Banner -->
-		<h3 class="my-3 ms-2">Employee Page</h3>
-		
+		<h3 class="my-3 ms-2">Edit Employee</h3>
+
 		<!-- Employee Form -->
 		<form method="post" enctype="multipart/form-data" asp-action="Edit">
 			<div asp-validation-summary="All"></div>
@@ -144,11 +144,12 @@
 
 				</div>
 
-				<input class="btn btn-primary edit-emp-btn" type="submit" value="Update Employee" />
+				<a asp-controller="Employee" asp-action="Index" class="btn btn-danger cancel-emp-btn">Cancel</a>
+				<input class="btn btn-primary edit-emp-btn" type="submit" value="Update" />
 
 			</div>
 		</form>
-		
+
 	</div>
 </div>
 

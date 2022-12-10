@@ -15,11 +15,44 @@ namespace HRManagement.Controllers
 			_employeeService = employeeService;
 		}
 
-		public IActionResult Index()
+		public IActionResult Index(string page, int rowlength)
 		{
 			List<Employee> employees = _employeeService.GetEmployees();
-			//return View(new List<Employee>());
-			return View(employees);
+			if (employees.Count == 0)
+				return View(new EmployeeViewModel());
+
+			if (rowlength == 0)
+				rowlength = 10;
+
+			double pageCount = (double)(employees.Count / Convert.ToDecimal(rowlength));
+
+			int parsedPage;
+			if (page == null || page == "" || page == "first")
+				parsedPage = 1;
+			else if (page == "last")
+				parsedPage = (int)Math.Ceiling(pageCount);
+			else
+				parsedPage = int.Parse(page);
+
+			if (parsedPage == 0)
+				parsedPage = 1;
+
+			List<Employee> filtered;
+			if (employees.Count > rowlength)
+				filtered = employees.GetRange((parsedPage - 1) * rowlength, rowlength);
+			else
+				filtered = employees;
+
+
+			EmployeeViewModel model = new()
+			{
+				Employees = filtered,
+				TotalPages = (int)Math.Ceiling(pageCount),
+				CurrentPage = parsedPage,
+				RowLength = rowlength
+			};
+
+			return View(model);
 		}
 
 		public IActionResult Delete(int id)
@@ -29,6 +62,14 @@ namespace HRManagement.Controllers
 				return RedirectToAction("Index");
 			else
 				return BadRequest("Invalid ID");
+		}
+
+		public IActionResult View(int id)
+		{
+			Employee? employee = _employeeService.GetEmployee(id);
+			if (employee == null)
+				return NotFound("Invalid ID");
+			return View(employee);
 		}
 
 		public IActionResult Edit(int id)
