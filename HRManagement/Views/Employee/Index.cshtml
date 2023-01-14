@@ -77,9 +77,14 @@
 											<a class="btn btn-info" asp-route-id="@item.Id" asp-action="Edit">
 												<i class="fas fa-edit text-white p-1"></i>
 											</a>
-											<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">
+											<a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" name="openDelete">
 												<i class="fas fa-trash text-white p-1"></i>
+												<input type="text" name="empId" value="@item.Id" hidden />
+												<input type="text" name="empName" value="@item.EmployeeName" hidden />
 											</a>
+											@*<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">
+													<i class="fas fa-trash text-white p-1"></i>
+												</a>*@
 										</div>
 									</td>
 
@@ -126,8 +131,7 @@
 			}*@
 
 		//show pages
-		<form asp-action="Index" asp-controller="Employee" class="mt-2">
-			<input type="text" id="page" name="page" value=@Model.CurrentPage hidden />
+		<div class="mt-2">
 			<div class="d-flex justify-content-between">
 				<ul class="pagination m-0 p-0">
 					<li class="page-item">
@@ -147,7 +151,9 @@
 						else
 						{
 							<li class="page-item">
-								<button class="page-link pager" value=@i type="submit">@i</button>
+								<button class="page-link pager" type="submit" value=@i>
+									<span>@i</span>
+								</button>
 							</li>
 						}
 					}
@@ -159,19 +165,59 @@
 					</li>
 				</ul>
 
+				@if (Model.RowLength == 1)
+				{
+					<label>Showing reocrd number @(Model.CurrentPage)</label>
+				}
+				else
+				{
+					<label>Showing reocrds @(((Model.CurrentPage - 1) * Model.RowLength) + 1) to @(Model.CurrentPage * Model.RowLength)</label>
+				}
+
 				<div class="d-flex align-items-center justify-content-center m-0 p-0 gap-2">
 					<label class="m-0 p-0">Items:</label>
-					<select class="form-select" name="rowlength" asp-for="RowLength" onchange="this.form.submit()">
+					<select class="form-select sizer" name="rowlength" asp-for="RowLength">
 						<option value="1">1</option>
+						<option value="3">3</option>
 						<option value="10">10</option>
 						<option value="50">50</option>
 					</select>
 				</div>
 			</div>
-		</form>
+		</div>
 
 	}
 
+</div>
+
+
+@*Delete Modal*@
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12 mb-1">
+						<div class="card border-left-danger shadow h-100 py-2">
+							<div class="card-body py-1">
+								<div class="row no-gutters align-items-center">
+									<div class="col mr-2">
+										<p class="text-dark">Really! You want to delete this Employee?</p>
+										<p class="text-dark" id="empDelId" hidden></p>
+										<p class="text-dark" id="empDelName"></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer py-3">
+				<button type="button" class="btn btn-danger float-right" id="deleteEmployee">Delete</button>
+				<button type="button" class="btn btn-secondary float-right mr-2" data-bs-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts{
@@ -184,8 +230,45 @@
 
 			$('button.pager').on('click', function () {
 				var text = $(this).val();
-				$("#page").val(text);
+				var urlParams = new URLSearchParams(window.location.search);
+				urlParams.set('page', text);
+				window.location.search = urlParams.toString();
 			})
+
+			$('select.sizer').on('change', function () {
+				var text = $(this).val();
+				var urlParams = new URLSearchParams(window.location.search);
+				urlParams.set('rowlength', text);
+				urlParams.set('page', 'first');
+				window.location.search = urlParams.toString();
+			})
+
+			$("a[name='openDelete']").click(function () {
+				var EmployeeId = $(this).children("input[name='empId']").val();
+				var EmployeeName = $(this).children("input[name='empName']").val();
+				$("#empDelId").text(EmployeeId);
+				$("#empDelName").text(EmployeeName);
+			});
+
+			$("#deleteEmployee").click(function () {
+				var EmployeeId = $("#empDelId").text();
+				$.ajax({
+					url: "Employee/Delete",
+					type: "POST",
+					dataType: "JSON",
+					data: { "id": EmployeeId },
+					cache: false,
+					beforeSend: function () {
+						$("button[data-bs-dismiss='modal']").trigger("click");
+					},
+					success: function () {
+						location.reload();
+					},
+					error: function (error) {
+						console.log(error);
+					}
+				});
+			});
 
 		})
 

@@ -1,9 +1,6 @@
 ﻿using HRManagement.Models;
 using HRManagement.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.ComponentModel;
-using System.Reflection.Metadata;
 
 namespace HRManagement.Controllers
 {
@@ -14,17 +11,17 @@ namespace HRManagement.Controllers
 		{
 			_employeeService = employeeService;
 		}
-
-		public IActionResult Index(string page, int rowlength)
+		
+		public IActionResult Index(string page = "first", int rowlength = 1)
 		{
-			List<Employee> employees = _employeeService.GetEmployees();
-			if (employees.Count == 0)
+			int employeeCount = _employeeService.GetEmployeesCount();
+			if (employeeCount == 0)
 				return View(new EmployeeViewModel());
 
 			if (rowlength == 0)
 				rowlength = 10;
 
-			double pageCount = (double)(employees.Count / Convert.ToDecimal(rowlength));
+			double pageCount = (double)(employeeCount / Convert.ToDecimal(rowlength));
 
 			int parsedPage;
 			if (page == null || page == "" || page == "first")
@@ -32,21 +29,23 @@ namespace HRManagement.Controllers
 			else if (page == "last")
 				parsedPage = (int)Math.Ceiling(pageCount);
 			else
-				parsedPage = int.Parse(page);
+			{
+				bool canParse = int.TryParse(page, out parsedPage);
+				if (!canParse) parsedPage = 1;
+			}
 
 			if (parsedPage == 0)
 				parsedPage = 1;
 
-			List<Employee> filtered;
-			if (employees.Count > rowlength)
-				filtered = employees.GetRange((parsedPage - 1) * rowlength, rowlength);
+			List<Employee> employees;
+			if (employeeCount > rowlength)
+				employees = _employeeService.GetEmployees(parsedPage, rowlength);
 			else
-				filtered = employees;
-
+				employees = _employeeService.GetAllEmployees();
 
 			EmployeeViewModel model = new()
 			{
-				Employees = filtered,
+				Employees = employees,
 				TotalPages = (int)Math.Ceiling(pageCount),
 				CurrentPage = parsedPage,
 				RowLength = rowlength
@@ -55,11 +54,21 @@ namespace HRManagement.Controllers
 			return View(model);
 		}
 
+		//public IActionResult Delete(int id)
+		//{
+		//	bool deleted = _employeeService.DeleteEmployee(id);
+		//	if (deleted)
+		//		return RedirectToAction("Index");
+		//	else
+		//		return BadRequest("Invalid ID");
+		//}
+
 		public IActionResult Delete(int id)
 		{
 			bool deleted = _employeeService.DeleteEmployee(id);
+
 			if (deleted)
-				return RedirectToAction("Index");
+				return Json("success");
 			else
 				return BadRequest("Invalid ID");
 		}
@@ -120,7 +129,6 @@ namespace HRManagement.Controllers
 			return View();
 		}
 
-		//set display name for empImage
 		[HttpPost]
 		public IActionResult Add(Employee emp, IFormFile EmployeeImage)
 		{
@@ -130,14 +138,15 @@ namespace HRManagement.Controllers
 			if (EmployeeImage != null)
 			{
 				if (EmployeeImage.Length > 0 && EmployeeImage.Length < 2097152 && EmployeeImage.ContentType.Contains("image"))
-					//Convert EmployeeImage to byte and save to database
-					using (MemoryStream ms = new MemoryStream())
+					//Convert EmployeeImage to byte array
+					using (MemoryStream ms = new())
 					{
 						EmployeeImage.CopyTo(ms);
 						emp.Image = ms.ToArray();
 					}
 				else
 					ModelState.AddModelError("CustomError", "File must be a valid image and less than 2MB.");
+
 			}
 			if (_employeeService.AddEmployee(emp))
 			{

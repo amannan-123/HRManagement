@@ -1,9 +1,6 @@
 ﻿using HRManagement.Models;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.Metrics;
-using System.Net;
-using System.Threading.Tasks.Sources;
 
 namespace HRManagement.Services
 {
@@ -75,7 +72,7 @@ namespace HRManagement.Services
 			return (_rows > 0);
 		}
 
-		public List<Employee> GetEmployees()
+		public List<Employee> GetAllEmployees()
 		{
 			//get all employees
 			SqlConnection conn = new(connectionString);
@@ -164,6 +161,64 @@ namespace HRManagement.Services
 			return employee;
 		}
 
+		public List<Employee> GetEmployees(int pageNumber, int rowCount)
+		{
+			//get employees by page number and row count
+			SqlConnection conn = new(connectionString);
+			conn.Open();
+			SqlCommand logger = new("GetEmployees", conn)
+			{
+				CommandType = CommandType.StoredProcedure
+			};
+			logger.Parameters.AddWithValue("@PageNumber", pageNumber);
+			logger.Parameters.AddWithValue("@RowCount", rowCount);
+			SqlDataReader reader = logger.ExecuteReader();
+			List<Employee> employees = new();
+			while (reader.Read())
+			{
+				Employee employee = new()
+				{
+					Id = Convert.ToInt32(reader["Id"]),
+					EmployeeCode = reader["EmployeeCode"].ToString() ?? "",
+					EmployeeName = reader["EmployeeName"].ToString() ?? "",
+					AppointedBy = reader["AppointedBy"].ToString() ?? "",
+					JoinDate = Convert.ToDateTime(reader["JoinDate"]),
+					Qualification = reader["Qualification"].ToString() ?? "",
+					Gender = reader["Gender"].ToString() ?? "",
+					DateOfBirth = Convert.ToDateTime(reader["DateOfBirth"]),
+					MaritalStatus = reader["MaritalStatus"].ToString() ?? "",
+					Religion = reader["Religion"].ToString() ?? "",
+					Dependants = Convert.ToInt32(reader["Dependants"]),
+					Email = reader["Email"].ToString() ?? "",
+					PostBox = reader["PostBox"].ToString() ?? "",
+					Country = reader["Country"].ToString() ?? "",
+					City = reader["City"].ToString() ?? "",
+					Landline = Convert.ToInt32(reader["Landline"]),
+					Mobile = Convert.ToInt32(reader["Mobile"].ToString()),
+					Address = reader["Address"].ToString() ?? "",
+					Image = (byte[])reader["Image"]
+				};
+				employees.Add(employee);
+			}
+
+			conn.Close();
+			return employees;
+		}
+
+		public int GetEmployeesCount()
+		{
+			//get employees count
+			SqlConnection conn = new(connectionString);
+			conn.Open();
+			SqlCommand logger = new("GetEmployeesCount", conn)
+			{
+				CommandType = CommandType.StoredProcedure
+			};
+			int count = Convert.ToInt32(logger.ExecuteScalar());
+			conn.Close();
+			return count;
+		}
+
 		public bool UpdateEmployee(Employee employee)
 		{
 			//update employee
@@ -205,7 +260,9 @@ namespace HRManagement.Services
 		bool AddEmployee(Employee employee);
 		bool UpdateEmployee(Employee employee);
 		bool DeleteEmployee(int id);
-		List<Employee> GetEmployees();
+		List<Employee> GetAllEmployees();
+		List<Employee> GetEmployees(int pageNumber, int rowCount);
 		Employee? GetEmployee(int id);
+		int GetEmployeesCount();
 	}
 }

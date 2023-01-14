@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-
-namespace HRManagement.Middlewares
+﻿namespace HRManagement.Middlewares
 {
 	public class HeaderModifier
 	{
