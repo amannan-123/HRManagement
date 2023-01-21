@@ -30,19 +30,13 @@
 						<thead>
 							<tr>
 								<th>
-									<span>
-										Employee Code
-									</span>
+									<span>Employee Code</span>
 								</th>
 								<th>
-									<span>
-										Employee Name
-									</span>
+									<span>Employee Name</span>
 								</th>
 								<th>
-									<span>
-										Email
-									</span>
+									<span>Email</span>
 								</th>
 								<th>
 									<span>Joining Date</span>
@@ -82,14 +76,9 @@
 												<input type="text" name="empId" value="@item.Id" hidden />
 												<input type="text" name="empName" value="@item.EmployeeName" hidden />
 											</a>
-											@*<a class="btn btn-danger" asp-route-id="@item.Id" asp-action="Delete">
-													<i class="fas fa-trash text-white p-1"></i>
-												</a>*@
 										</div>
 									</td>
-
 								</tr>
-
 							}
 
 						</tbody>
@@ -98,41 +87,9 @@
 			</div>
 		</div>
 
-		@*@foreach (Employee emp in Model.Employees)
-			{
-				<ul class="list-group">
-					<li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-						<div class="d-flex">
-							@if (emp.ImageData() != null)
-							{
-								<img id="prevImage" class="my-2" border="1"
-									 src=@emp.ImageData() alt="Avatar" width="100"
-									 height="100">
-							}
-							<div class="d-flex flex-row gap-3 flex-nowrap align-items-center ms-3">
-								<a>
-									<strong>Code:</strong> @emp.EmployeeCode
-								</a>
-								<a>
-									<strong>Name:</strong> @emp.EmployeeName
-								</a>
-							</div>
-						</div>
-						<div>
-							<a class="btn btn-info" asp-route-id="@emp.Id" asp-action="Edit">
-								<i class="fas fa-edit text-white p-2"></i>
-							</a>
-							<a class="btn btn-danger" asp-route-id="@emp.Id" asp-action="Delete">
-								<i class="fas fa-trash text-white p-2"></i>
-							</a>
-						</div>
-					</li>
-				</ul>
-			}*@
-
 		//show pages
 		<div class="mt-2">
-			<div class="d-flex justify-content-between">
+			<div class="d-flex align-items-center flex-wrap justify-content-between">
 				<ul class="pagination m-0 p-0">
 					<li class="page-item">
 						<button class="page-link pager" type="submit" value="first" disabled="@(Model.CurrentPage==1)">
@@ -167,11 +124,11 @@
 
 				@if (Model.RowLength == 1)
 				{
-					<label>Showing reocrd number @(Model.CurrentPage)</label>
+					<label class="m-0 p-0">Showing record number @(Model.CurrentPage)</label>
 				}
 				else
 				{
-					<label>Showing reocrds @(((Model.CurrentPage - 1) * Model.RowLength) + 1) to @(Model.CurrentPage * Model.RowLength)</label>
+					<label class="m-0 p-0">Showing records @(((Model.CurrentPage - 1) * Model.RowLength) + 1) to @(Model.CurrentPage * Model.RowLength)</label>
 				}
 
 				<div class="d-flex align-items-center justify-content-center m-0 p-0 gap-2">

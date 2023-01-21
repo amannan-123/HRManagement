@@ -1,55 +1,17 @@
-﻿@model List<HRManagement.Models.Department>
-
-@{
-	ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = "Departments";
 }
 
-
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="d-flex align-items-center justify-content-between mb-4">
 	<h1 class="h3 mb-0 text-gray-800">Department</h1>
 	<i class="fas fa-plus fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#addModal"></i>
 </div>
 
-<div class="row">
-
-	@*Department Card*@
-	@foreach (var item in Model as List<Department>)
-	{
-		<div class="col-lg-4 col-md-5 mb-4">
-			<div class="card border-left-primary shadow h-100 py-2">
-				<div class="card-body py-1">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="font-weight-bold text-primary mb-1">
-								<p class="mb-1">Department Code:</p>
-								<p class="text-dark h5">@item.Code</p>
-							</div>
-							<div class="font-weight-bold text-primary mb-1">
-								<p class="mb-1">Department Name:</p>
-								<p class="text-dark h4">@item.Name</p>
-							</div>
-						</div>
-						@*Edit*@
-						<div class="col-auto mt-2">
-							<i class="fas fa-edit fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#editModal" name="openEdit"></i>
-							<input type="text" name="desId" value="@item.Id" hidden />
-							<input type="text" name="desCode" value="@item.Code" hidden />
-							<input type="text" name="desName" value="@item.Name" hidden />
-						</div>
-						@*Delete*@
-						<div class="col-auto mt-2">
-							<i class="fas fa-trash fa-2x text-white bg-danger p-2 ml-3 rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" name="openDelete"></i>
-							<input type="text" name="desId" value="@item.Id" hidden />
-							<input type="text" name="desName" value="@item.Name" hidden />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
-
+<div class="row m-0" id="deps">
+	<div class="d-flex align-items-center justify-content-center border-1 border-dark">
+		<label class="p-5 m-5 text-info fs-1">Loading...</label>
+	</div>
 </div>
-
 
 @*Add Modal*@
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
@@ -164,8 +126,6 @@
 	</div>
 </div>
 
-
-
 @section Scripts{
 
 	<partial name="_ValidationScriptsPartial" />
@@ -175,23 +135,25 @@
 		/// <reference path="../../wwwroot/lib/jquery/dist/jquery.js" />
 		$(document).ready(function () {
 
-			$("i[name='openEdit']").click(function () {
-				var DepartmentId = $(this).siblings("input[name='desId']").val();
-				var DepartmentCode = $(this).siblings("input[name='desCode']").val();
-				var DepartmentName = $(this).siblings("input[name='desName']").val();
+			$("#deps").load("Department/GetDepsPartial");
+
+			$("#deps").on('click', "i[name='openEdit']", function () {
+				var DepartmentId = $(this).siblings("input[name='depId']").val();
+				var DepartmentCode = $(this).siblings("input[name='depCode']").val();
+				var DepartmentName = $(this).siblings("input[name='depName']").val();
 				$("#DesEditId").val(DepartmentId);
 				$("#DesEditCode").val(DepartmentCode);
 				$("#DesEditName").val(DepartmentName);
-			});
+			})
 
-			$("i[name='openDelete']").click(function () {
-				var DepartmentId = $(this).siblings("input[name='desId']").val();
-				var DepartmentName = $(this).siblings("input[name='desName']").val();
+			$("#deps").on('click', "i[name='openDelete']", function () {
+				var DepartmentId = $(this).siblings("input[name='depId']").val();
+				var DepartmentName = $(this).siblings("input[name='depName']").val();
 				$("#desDelId").text(DepartmentId);
 				$("#desDelName").text(DepartmentName);
-			});
+			})
 
-			$("#addDepartment").click(function () {
+			$("#addDepartment").on('click', function () {
 				var DepartmentCode = $("#DesAddCode").val();
 				var DepartmentName = $("#DesAddName").val();
 
@@ -206,16 +168,17 @@
 						data: { "code": DepartmentCode, "name": DepartmentName },
 						cache: false,
 						success: function () {
-							location.reload();
+							$("button[data-bs-dismiss='modal']").trigger("click");
+							$("#deps").load("Department/GetDepsPartial");
+							$("#DesAddError").text("");
 						},
 						error: function (error) {
 							$("#DesAddError").text(error.responseText);
-							console.log(error);
 						}
 					});
 			});
 
-			$("#editDepartment").click(function () {
+			$("#editDepartment").on('click', function () {
 				var DepartmentId = $("#DesEditId").val();
 				var DepartmentCode = $("#DesEditCode").val();
 				var DepartmentName = $("#DesEditName").val();
@@ -231,16 +194,17 @@
 						data: { "id": DepartmentId, "code": DepartmentCode, "name": DepartmentName },
 						cache: false,
 						success: function () {
-							location.reload();
+							$("button[data-bs-dismiss='modal']").trigger("click");
+							$("#deps").load("Department/GetDepsPartial");
+							$("#DesEditError").text("");
 						},
 						error: function (error) {
 							$("#DesEditError").text(error.responseText);
-							console.log(error);
 						}
 					});
 			});
 
-			$("#deleteDepartment").click(function () {
+			$("#deleteDepartment").on('click', function () {
 				var DepartmentId = $("#desDelId").text();
 				$.ajax({
 					url: "Department/Delete",
@@ -252,14 +216,14 @@
 						$("button[data-bs-dismiss='modal']").trigger("click");
 					},
 					success: function () {
-						location.reload();
+						$("#deps").load("Department/GetDepsPartial");
 					},
 					error: function (error) {
-						console.log(error);
+						//console.log(error);
 					}
 				});
 			});
-		});
 
+		});
 	</script>
 }

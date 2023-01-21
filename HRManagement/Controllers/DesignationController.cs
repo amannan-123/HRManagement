@@ -14,8 +14,7 @@ namespace HRManagement.Controllers
 
 		public IActionResult Index()
 		{
-			List<Designation> designations = _designationService.GetDesignations();
-			return View(designations);
+			return View();
 		}
 
 		public IActionResult Delete(int id)
@@ -53,6 +52,13 @@ namespace HRManagement.Controllers
 				return Json("success");
 			else
 				return BadRequest("Designation code already exists.");
+		}
+
+		[HttpGet]
+		public IActionResult GetDesigsPartial()
+		{
+			List<Designation> designations = _designationService.GetDesignations();
+			return PartialView("_Designations", designations);
 		}
 	}
 }

@@ -1,55 +1,17 @@
-﻿@model List<HRManagement.Models.Designation>
-
-@{
-	ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = "Designations";
 }
 
-
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="d-flex align-items-center justify-content-between mb-4">
 	<h1 class="h3 mb-0 text-gray-800">Designation</h1>
 	<i class="fas fa-plus fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#addModal"></i>
 </div>
 
-<div class="row">
-
-	@*Designation Card*@
-	@foreach (var item in Model as List<Designation>)
-	{
-		<div class="col-lg-4 col-md-5 mb-4">
-			<div class="card border-left-primary shadow h-100 py-2">
-				<div class="card-body py-1">
-					<div class="row no-gutters align-items-center">
-						<div class="col mr-2">
-							<div class="font-weight-bold text-primary mb-1">
-								<p class="mb-1">Designation Code:</p>
-								<p class="text-dark h5">@item.Code</p>
-							</div>
-							<div class="font-weight-bold text-primary mb-1">
-								<p class="mb-1">Designation Name:</p>
-								<p class="text-dark h4">@item.Name</p>
-							</div>
-						</div>
-						@*Edit*@
-						<div class="col-auto mt-2">
-							<i class="fas fa-edit fa-2x text-white bg-primary p-2 rounded" data-bs-toggle="modal" data-bs-target="#editModal" name="openEdit"></i>
-							<input type="text" name="desId" value="@item.Id" hidden />
-							<input type="text" name="desCode" value="@item.Code" hidden />
-							<input type="text" name="desName" value="@item.Name" hidden />
-						</div>
-						@*Delete*@
-						<div class="col-auto mt-2">
-							<i class="fas fa-trash fa-2x text-white bg-danger p-2 ml-3 rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" name="openDelete"></i>
-							<input type="text" name="desId" value="@item.Id" hidden />
-							<input type="text" name="desName" value="@item.Name" hidden />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	}
-
+<div class="row m-0" id="desigs">
+	<div class="d-flex align-items-center justify-content-center border-1 border-dark">
+		<label class="p-5 m-5 text-info fs-1">Loading...</label>
+	</div>
 </div>
-
 
 @*Add Modal*@
 <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
@@ -67,11 +29,13 @@
 									<div class="col mr-2">
 
 										<div class="font-weight-bold text-primary mb-1">
-											<label>Designation Code</label><br />
+											<label>Designation Code</label>
+											<br />
 											<input type="text" id="DesAddCode" value="" />
 										</div>
 										<div class="font-weight-bold text-primary mb-1">
-											<label>Designation Name</label><br />
+											<label>Designation Name</label>
+											<br />
 											<input type="text" id="DesAddName" value="" />
 										</div>
 
@@ -107,15 +71,18 @@
 									<div class="col mr-2">
 
 										<div class="font-weight-bold text-primary mb-1">
-											<label>Designation Id</label><br />
+											<label>Designation Id</label>
+											<br />
 											<input type="text" id="DesEditId" value="" disabled />
 										</div>
 										<div class="font-weight-bold text-primary mb-1">
-											<label>Designation Code</label><br />
+											<label>Designation Code</label>
+											<br />
 											<input type="text" id="DesEditCode" value="" />
 										</div>
 										<div class="font-weight-bold text-primary mb-1">
-											<label>Designation Name</label><br />
+											<label>Designation Name</label>
+											<br />
 											<input type="text" id="DesEditName" value="" />
 										</div>
 
@@ -164,8 +131,6 @@
 	</div>
 </div>
 
-
-
 @section Scripts{
 
 	<partial name="_ValidationScriptsPartial" />
@@ -175,23 +140,25 @@
 		/// <reference path="../../wwwroot/lib/jquery/dist/jquery.js" />
 		$(document).ready(function () {
 
-			$("i[name='openEdit']").click(function () {
+			$("#desigs").load("Designation/GetDesigsPartial");
+
+			$("#desigs").on('click', "i[name='openEdit']", function () {
 				var DesignationId = $(this).siblings("input[name='desId']").val();
 				var DesignationCode = $(this).siblings("input[name='desCode']").val();
 				var DesignationName = $(this).siblings("input[name='desName']").val();
 				$("#DesEditId").val(DesignationId);
 				$("#DesEditCode").val(DesignationCode);
 				$("#DesEditName").val(DesignationName);
-			});
+			})
 
-			$("i[name='openDelete']").click(function () {
+			$("#desigs").on('click', "i[name='openDelete']", function () {
 				var DesignationId = $(this).siblings("input[name='desId']").val();
 				var DesignationName = $(this).siblings("input[name='desName']").val();
 				$("#desDelId").text(DesignationId);
 				$("#desDelName").text(DesignationName);
-			});
+			})
 
-			$("#addDesignation").click(function () {
+			$("#addDesignation").on('click', function () {
 				var DesignationCode = $("#DesAddCode").val();
 				var DesignationName = $("#DesAddName").val();
 
@@ -206,16 +173,17 @@
 						data: { "code": DesignationCode, "name": DesignationName },
 						cache: false,
 						success: function () {
-							location.reload();
+							$("button[data-bs-dismiss='modal']").trigger("click");
+							$("#desigs").load("Designation/GetDesigsPartial");
+							$("#DesAddError").text("");
 						},
 						error: function (error) {
 							$("#DesAddError").text(error.responseText);
-							console.log(error);
 						}
 					});
 			});
 
-			$("#editDesignation").click(function () {
+			$("#editDesignation").on('click', function () {
 				var DesignationId = $("#DesEditId").val();
 				var DesignationCode = $("#DesEditCode").val();
 				var DesignationName = $("#DesEditName").val();
@@ -231,16 +199,17 @@
 						data: { "id": DesignationId, "code": DesignationCode, "name": DesignationName },
 						cache: false,
 						success: function () {
-							location.reload();
+							$("button[data-bs-dismiss='modal']").trigger("click");
+							$("#desigs").load("Designation/GetDesigsPartial");
+							$("#DesEditError").text("");
 						},
 						error: function (error) {
 							$("#DesEditError").text(error.responseText);
-							console.log(error);
 						}
 					});
 			});
 
-			$("#deleteDesignation").click(function () {
+			$("#deleteDesignation").on('click', function () {
 				var DesignationId = $("#desDelId").text();
 				$.ajax({
 					url: "Designation/Delete",
@@ -252,13 +221,14 @@
 						$("button[data-bs-dismiss='modal']").trigger("click");
 					},
 					success: function () {
-						location.reload();
+						$("#desigs").load("Designation/GetDesigsPartial");
 					},
 					error: function (error) {
-						console.log(error);
+						//console.log(error);
 					}
 				});
 			});
+
 		});
 
 	</script>

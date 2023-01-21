@@ -6,21 +6,20 @@ namespace HRManagement.Controllers
 {
 	public class DepartmentController : Controller
 	{
-		private readonly IDepartmentService _DepartmentService;
-		public DepartmentController(IDepartmentService DepartmentService)
+		private readonly IDepartmentService _departmentService;
+		public DepartmentController(IDepartmentService departmentService)
 		{
-			_DepartmentService = DepartmentService;
+			_departmentService = departmentService;
 		}
 
 		public IActionResult Index()
 		{
-			List<Department> Departments = _DepartmentService.GetDepartments();
-			return View(Departments);
+			return View();
 		}
 
 		public IActionResult Delete(int id)
 		{
-			bool deleted = _DepartmentService.DeleteDepartment(id);
+			bool deleted = _departmentService.DeleteDepartment(id);
 
 			if (deleted)
 				return Json("success");
@@ -33,7 +32,7 @@ namespace HRManagement.Controllers
 		{
 			Department des = new() { Id = id, Code = code, Name = name };
 
-			if (_DepartmentService.UpdateDepartment(des))
+			if (_departmentService.UpdateDepartment(des))
 				return Json("success");
 			else
 				return BadRequest("Department code already exists.");
@@ -47,12 +46,19 @@ namespace HRManagement.Controllers
 		[HttpPost]
 		public IActionResult Add(string code, string name)
 		{
-			Department des = new() { Code = code, Name = name };
+			Department dep = new() { Code = code, Name = name };
 
-			if (_DepartmentService.AddDepartment(des))
+			if (_departmentService.AddDepartment(dep))
 				return Json("success");
 			else
 				return BadRequest("Department code already exists.");
+		}
+
+		[HttpGet]
+		public IActionResult GetDepsPartial()
+		{
+			List<Department> departments = _departmentService.GetDepartments();
+			return PartialView("_Departments", departments);
 		}
 	}
 }

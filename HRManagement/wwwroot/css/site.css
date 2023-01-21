@@ -1,3 +1,7 @@
+.border-1 {
+	border-style: solid;
+}
+
 .login-image {
 	background: url('../images/login-bg.png');
 	background-repeat: no-repeat;
@@ -14,7 +18,7 @@
 
 .cancel-emp-btn {
 	width: 100px;
-	margin-right:10px;
+	margin-right: 10px;
 }
 
 .edit-emp-btn {
