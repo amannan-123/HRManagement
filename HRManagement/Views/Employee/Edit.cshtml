@@ -96,7 +96,7 @@
 						<div class="col-3 form-group">
 							<label for="EmployeeImage" class="form-label">Employee Picture</label>
 							@{
-								string? _src = (Model.ImageData() != null) ? @Model.ImageData() : "~/images/avatar.png";
+								string? _src = (Model.ImageData() != null) ? @Model.ImageData() : @Url.Content("~/images/avatar.png");
 							}
 							<img id="prevImage" class="my-2" border="1"
 								 src=@_src alt="Avatar" width="100"

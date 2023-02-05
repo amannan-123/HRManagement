@@ -106,7 +106,7 @@ namespace HRManagement.Services
 					Landline = Convert.ToInt32(reader["Landline"]),
 					Mobile = Convert.ToInt32(reader["Mobile"].ToString()),
 					Address = reader["Address"].ToString() ?? "",
-					Image = (byte[])reader["Image"]
+					Image = (reader["Image"] != DBNull.Value) ? (byte[])reader["Image"] : null
 				};
 				employees.Add(employee);
 			}
@@ -153,7 +153,7 @@ namespace HRManagement.Services
 					Landline = Convert.ToInt32(reader["Landline"]),
 					Mobile = Convert.ToInt32(reader["Mobile"].ToString()),
 					Address = reader["Address"].ToString() ?? "",
-					Image = (byte[])reader["Image"]
+					Image = (reader["Image"] != DBNull.Value) ? (byte[])reader["Image"] : null
 				};
 			}
 
@@ -196,7 +196,7 @@ namespace HRManagement.Services
 					Landline = Convert.ToInt32(reader["Landline"]),
 					Mobile = Convert.ToInt32(reader["Mobile"].ToString()),
 					Address = reader["Address"].ToString() ?? "",
-					Image = (byte[])reader["Image"]
+					Image = (reader["Image"] != DBNull.Value) ? (byte[])reader["Image"] : null
 				};
 				employees.Add(employee);
 			}
